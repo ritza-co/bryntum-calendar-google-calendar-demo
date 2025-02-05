@@ -122,7 +122,8 @@ export default [
                     onlyEquality : true
                 }
             ],
-            'n/no-callback-literal' : 'off'
+            'n/no-callback-literal' : 'off',
+            'react/prop-types'      : 0
         }
     }
 ];
