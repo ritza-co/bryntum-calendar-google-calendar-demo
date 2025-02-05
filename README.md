@@ -20,6 +20,6 @@ Run the local dev server using the following command:
 npm run dev
 ```
 
-Open http://localhost:5173, you'll see a blue  header with the title "Google Calendar Sign-in Demo" and the text "TODO" rendered below on your screen:
+Open http://localhost:5173, you'll see a blue header with the title "Google Calendar Sign-in Demo" and the text "TODO" rendered below on your screen:
 
 [Initial app](./src/assets/initial-app.png)
