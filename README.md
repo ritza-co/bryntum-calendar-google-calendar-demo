@@ -22,4 +22,4 @@ npm run dev
 
 Open http://localhost:5173, you'll see a blue header with the title "Google Calendar Sign-in Demo" and the text "TODO" rendered below on your screen:
 
-[Initial app](./src/assets/initial-app.png)
+![Initial app](./src/assets/initial-app.png)
