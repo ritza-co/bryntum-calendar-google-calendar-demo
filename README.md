@@ -1,4 +1,4 @@
-# Sync Google Calendar Events to Bryntum Calendar with Google Authentication starter
+# Sync Google Calendar events to Bryntum Calendar with Google Authentication
 
 This starter project was generated using the [Vite with JavaScript and React starter template](https://vite.dev/guide/#scaffolding-your-first-vite-project).
 
@@ -20,6 +20,6 @@ Run the local dev server using the following command:
 npm run dev
 ```
 
-Open http://localhost:5173, you'll see a blue header with the title "Google Calendar Sign-in Demo" and the text "TODO" rendered below on your screen:
+Open `http://localhost:5173`. You will see a blue header with the title **Google Calendar Sign-in Demo** and text reading **TODO** rendered below the header:
 
 ![Initial app](./src/assets/initial-app.png)
