@@ -117,7 +117,7 @@ function App() {
             <header>
                 <div className="title-container">
                     <img src={bryntumLogo} role="presentation" alt="Bryntum logo" />
-                    <h1>Google Calendar Sign-in Demo</h1>
+                    <h1>Bryntum Calendar synced with Google Calendar demo</h1>
                 </div>
                 { accessToken ?
                     <SignOutButton
