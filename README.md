@@ -1,4 +1,4 @@
-# Deploy a Bryntum Calendar with Google Authentication synced to Google Calendar 
+# Sync Google Calendar Events to Bryntum Calendar with Google Authentication starter
 
 This starter project was generated using the [Vite with JavaScript and React starter template](https://vite.dev/guide/#scaffolding-your-first-vite-project).
 
@@ -26,4 +26,3 @@ npm run dev
 ```
 
 The application will be available at http://localhost:5173, 
-
