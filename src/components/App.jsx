@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { BryntumCalendar } from '@bryntum/calendar-react';
 import Cookies from 'js-cookie';
@@ -16,7 +16,7 @@ function App() {
     const [accessToken, setAccessToken] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
-    const syncData = ({ action, records }) => {
+    const syncData = useCallback(({ action, records }) => {
         if (action === 'add') {
             return;
         }
@@ -32,9 +32,9 @@ function App() {
                 accessToken
             );
         });
-    };
+    }, [accessToken]);
 
-    const addRecord = ({ eventRecord }) => {
+    const addRecord = useCallback(({ eventRecord }) => {
         if (
             eventRecord.id.startsWith('_generated')
         ) {
@@ -61,9 +61,9 @@ function App() {
                 accessToken
             );
         }
-    };
+    }, [accessToken]);
 
-    const calendarConfig = {
+    const calendarConfig = useMemo(() => ({
         defaultMode      : 'month',
         eventEditFeature : {
             items : {
@@ -81,7 +81,7 @@ function App() {
         },
         onDataChange     : syncData,
         onAfterEventSave : addRecord
-    };
+    }), [syncData, addRecord]);
 
     useEffect(() => {
         async function fetchData() {
