@@ -1,7 +1,7 @@
 import { BryntumButton } from '@bryntum/calendar-react';
 import { useGoogleLogin } from '@react-oauth/google';
 import Cookies from 'js-cookie';
-import { listCalendarEvents } from '../crudFunctions';
+import { listInitialCalendarEvents } from '../crudFunctions';
 
 function SignInButton({
     setModalVisible,
@@ -14,7 +14,7 @@ function SignInButton({
             Cookies.set('google_access_token', tokenResponse.access_token, { expires : 1, path : '/' });
             setAccessToken(tokenResponse.access_token);
             setModalVisible(false);
-            listCalendarEvents(tokenResponse.access_token, setEvents);
+            listInitialCalendarEvents(tokenResponse.access_token, setEvents);
         },
         onError : (err) => {
             console.error('Login Failed:', err);

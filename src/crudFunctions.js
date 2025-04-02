@@ -1,17 +1,26 @@
-export async function listCalendarEvents(accessToken, setEvents) {
+function getCurrentWeekBoundaries() {
+    const now = new Date();
+    const sunday = new Date(now);
+    sunday.setDate(now.getDate() - now.getDay()); // Subtract days to get to Sunday
+    sunday.setHours(0, 0, 0, 0); // Start of day
+
+    const saturday = new Date(sunday);
+    saturday.setDate(sunday.getDate() + 6); // Add 6 days to get to Saturday
+    saturday.setHours(23, 59, 59, 999); // End of day
+
+    return { sunday, saturday };
+}
+
+export async function listInitialCalendarEvents(accessToken, setEvents) {
     if (!accessToken) return;
 
-    const now = new Date();
-    const twoWeeksBack = new Date(now);
-    twoWeeksBack.setDate(now.getDate() - 14);
-    const twoWeeksForward = new Date(now);
-    twoWeeksForward.setDate(now.getDate() + 14);
+    const { sunday, saturday } = getCurrentWeekBoundaries();
 
     const query = new URLSearchParams({
-        timeMin      : twoWeeksBack.toISOString(),
-        timeMax      : twoWeeksForward.toISOString(),
+        timeMin      : sunday.toISOString(),
+        timeMax      : saturday.toISOString(),
         singleEvents : 'true',
-        maxResults   : '100',
+        maxResults   : '250', // default value = 250
         orderBy      : 'startTime'
     });
 
@@ -33,6 +42,73 @@ export async function listCalendarEvents(accessToken, setEvents) {
         allDay    : !ev.start.dateTime
     }));
     setEvents(formattedEvents);
+}
+
+export async function listCalendarEvents(accessToken, setEvents) {
+    if (!accessToken) return;
+
+    const { sunday: lowerBoundary, saturday: upperBoundary } = getCurrentWeekBoundaries();
+
+    lowerBoundary.setDate(lowerBoundary.getDate() - 1);
+    lowerBoundary.setHours(23, 59, 59, 999);
+    upperBoundary.setDate(upperBoundary.getDate() + 1);
+    upperBoundary.setHours(0, 0, 0, 0);
+
+    const pastEventsQuery = new URLSearchParams({
+        timeMax      : lowerBoundary.toISOString(),
+        singleEvents : 'true',
+        maxResults   : '2500', // maximum number of events that can be fetched in one request
+        orderBy      : 'startTime'
+    });
+
+    const futureEventsQuery = new URLSearchParams({
+        timeMin      : upperBoundary.toISOString(),
+        singleEvents : 'true',
+        maxResults   : '2500',
+        orderBy      : 'startTime'
+    });
+
+    const [pastRes, futureRes] = await Promise.all([
+        fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?${pastEventsQuery}`, {
+            headers : {
+                Authorization : `Bearer ${accessToken}`
+            }
+        }),
+        fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?${futureEventsQuery}`, {
+            headers : {
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+    ]);
+
+    if (!pastRes.ok) {
+        throw new Error('Error fetching events:', pastRes.statusText);
+    }
+    if (!futureRes.ok) {
+        throw new Error('Error fetching events:', futureRes.statusText);
+    }
+
+    const [pastData, futureData] = await Promise.all([
+        pastRes.json(),
+        futureRes.json()
+    ]);
+
+    if (!pastData.items) return;
+    if (!futureData.items) return;
+
+    const formatEvents = items => items.map(ev => ({
+        id        : ev.id,
+        name      : ev.summary,
+        startDate : ev.start.dateTime || ev.start.date,
+        endDate   : ev.end.dateTime || ev.end.date,
+        allDay    : !ev.start.dateTime
+    }));
+
+    const pastEvents = formatEvents(pastData.items);
+    const futureEvents = formatEvents(futureData.items);
+    setEvents(currentEvents => {
+        return [...pastEvents, ...currentEvents, ...futureEvents];
+    });
 }
 
 export function BryntumSync(

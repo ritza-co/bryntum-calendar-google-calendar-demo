@@ -4,7 +4,7 @@ import { BryntumCalendar } from '@bryntum/calendar-react';
 import Cookies from 'js-cookie';
 import SignInModal from './SignInModal';
 import SignOutButton from './SignOutButton';
-import { BryntumSync, listCalendarEvents } from '../crudFunctions';
+import { BryntumSync, listCalendarEvents, listInitialCalendarEvents } from '../crudFunctions';
 import bryntumLogo from '../assets/bryntum-symbol-white.svg';
 import '@bryntum/calendar/calendar.stockholm.css';
 import '../css/App.css';
@@ -12,7 +12,9 @@ import SignInButton from './SignInButton';
 
 function App() {
     const calendarRef = useRef(null);
-    const [events, setEvents] = useState();
+    const hasRunFirstEffect = useRef(false);
+    const hasFetchedInitialEvents = useRef(false);
+    const [events, setEvents] = useState([]);
     const [isModalVisible, setModalVisible] = useState(true);
     const [accessToken, setAccessToken] = useState();
     const [isLoading, setIsLoading] = useState(true);
@@ -85,12 +87,16 @@ function App() {
     }), [syncData, addRecord]);
 
     useEffect(() => {
+        if (hasRunFirstEffect.current) {
+            return;
+        }
+        hasRunFirstEffect.current = true;
         async function fetchData() {
             const savedToken = Cookies.get('google_access_token');
             if (savedToken) {
                 setAccessToken(savedToken);
                 try {
-                    await listCalendarEvents(savedToken, setEvents);
+                    await listInitialCalendarEvents(savedToken, setEvents);
                 }
                 catch (error) {
                     console.error('Error fetching events:', error);
@@ -100,6 +106,24 @@ function App() {
         fetchData();
         setIsLoading(false);
     }, []);
+
+    useEffect(() => {
+        // Skip if still loading or if we've already fetched events
+        if (isLoading) return;
+        if (hasFetchedInitialEvents.current) return;
+
+        async function fetchAllData() {
+            if (!accessToken) return;
+            try {
+                hasFetchedInitialEvents.current = true;
+                await listCalendarEvents(accessToken, setEvents);
+            }
+            catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        }
+        fetchAllData();
+    }, [isLoading, accessToken]);
 
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
