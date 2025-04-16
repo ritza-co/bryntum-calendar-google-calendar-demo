@@ -8,9 +8,14 @@
     "build": "vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "preview": "vite preview"
+    "preview": "vite preview --port 5173"
   },
   "dependencies": {
+    "@bryntum/calendar": "^6.1.6",
+    "@bryntum/calendar-react": "^6.1.6",
+    "@react-oauth/google": "^0.12.1",
+    "focus-trap-react": "^11.0.3",
+    "js-cookie": "^3.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
