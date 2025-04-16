@@ -46,4 +46,4 @@ npm run dev
 
 Open http://localhost:5173, and login using your Google account. You'll see your Google calendar events displayed in the Bryntum Calendar:
 
-[Initial app](./src/assets/initial-app.png)
+![Initial app](./src/assets/initial-app.png)
