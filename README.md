@@ -1,8 +1,10 @@
-# Deploy a Bryntum Calendar with Google Authentication synced to Google Calendar 
+# Syncing Google Calendar and Bryntum Calendar Demo
 
-The code for the complete app, ready for deployment, is on the `completed-calendar` branch.
+This is the repository for the project hosted at https://google-calendar-demo.bryntum.com. 
 
-## Getting started
+It lets see people open a basic app showing a Bryntum Calendar with real events from their Google Calendar.
+
+## Build and deploy (Quickstart)
 
 Install the dependencies by running the following command: 
 
@@ -18,9 +20,18 @@ Create an `.env` file in the root folder and save your Google project's OAuth **
 VITE_GOOGLE_CLIENT_ID=<your-client-id>
 ```
 
-Your Google project will need to have the "../auth/calendar.events" scope added.
+Run 
+
+```
+npm run build
+```
+
+This puts the full application into the `dist` folder. It's a front-end only application so it can be hosted anywhere easily.
+
 
 ## Installing the Bryntum Calendar React component
+
+If you're not set up with Bryntum calendar, you might need to do this first before the above will work.
 
 First, follow the [guide to accessing the Bryntum npm repository](https://bryntum.com/products/calendar/docs/guide/Calendar/npm-repository). Once you’ve logged in to the registry, install the Bryntum Calendar packages.
 
@@ -37,6 +48,8 @@ First, follow the [guide to accessing the Bryntum npm repository](https://bryntu
   ```
 
 ## Running the app
+
+If you want to test the app locally before deploying, you can do it like this.
 
 Run the local dev server using the following command:
 
